@@ -1,18 +1,16 @@
 image: Ubuntu
 
-stack: jdk 11
-
 branches:
   only:
     - master
 
-
 build: off
 
 install:
-
-  - java -jar ./artifacts/app-mbank.jar &
-  - chmod +x gradlew
+  - ps: $App = Start-Process -FilePath java -ArgumentList "-jar ./artifacts/app-order.jar" -PassThru
 
 build_script:
-  - ./gradlew test --info
+  - ps: ./gradlew test --info "-Dselenide.headless=true"
+
+on_finish:
+  - ps: Stop-Process -Id $App.Id
