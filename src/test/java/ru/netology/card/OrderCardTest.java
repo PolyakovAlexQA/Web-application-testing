@@ -20,4 +20,16 @@ public class OrderCardTest {
         $("[data-test-id=order-success]").shouldHave(exactText("Ваша заявка успешно отправлена! Наш менеджер свяжется с вами в ближайшее время."));
     }
 
+
+    @Test
+    void ValidationСheck() {
+        open("http://localhost:9999");
+        SelenideElement form = $(".form");
+        form.$("[data-test-id=name] input").setValue("Polyakov Alexandr");
+        form.$("[data-test-id=phone] input").setValue("+79999000203");
+        form.$("[data-test-id=agreement]").click();
+        form.$("[role=button]").click();
+        $(".input_invalid[data-test-id=name]").shouldHave(exactText("Фамилия и имя Имя и Фамилия указаные неверно. Допустимы только русские буквы, пробелы и дефисы."));
+    }
+
 }
