@@ -10,7 +10,7 @@ import static com.codeborne.selenide.Selenide.open;
 
 public class OrderCardTest {
     @Test
-    void Open() {
+    void OpenHappyPath() {
         open("http://localhost:9999");
         SelenideElement form = $(".form");
         form.$("[data-test-id=name] input").setValue("Поляков Александр");
@@ -22,7 +22,7 @@ public class OrderCardTest {
 
 
     @Test
-    void ValidationСheck() {
+    void  ValidationCheckNumber() {
         open("http://localhost:9999");
         SelenideElement form = $(".form");
         form.$("[data-test-id=name] input").setValue("Polyakov Alexandr");
@@ -32,4 +32,36 @@ public class OrderCardTest {
         $(".input_invalid[data-test-id=name]").shouldHave(exactText("Фамилия и имя Имя и Фамилия указаные неверно. Допустимы только русские буквы, пробелы и дефисы."));
     }
 
+
+    @Test
+    void EmptyNumberTest() {
+        open("http://localhost:9999");
+        SelenideElement form = $(".form");
+        form.$("[data-test-id=name] input").setValue("Поляков Александр");
+        form.$("[data-test-id=agreement]").click();
+        form.$("[role=button]").click();
+        $(".input_invalid[data-test-id=phone]").shouldHave(exactText("Мобильный телефон Поле обязательно для заполнения"));
+    }
+
+    @Test
+    void ValidationCheckPhoneTest(){
+        open("http://localhost:9999");
+        SelenideElement form = $(".form");
+        form.$("[data-test-id=name] input").setValue("Поляков Александр");
+        form.$("[data-test-id=agreement]").click();
+        form.$("[data-test-id=phone] input").setValue("79999000203");
+        form.$("[role=button]").click();
+        $(".input_invalid[data-test-id=phone]").shouldHave(exactText("Мобильный телефон Телефон указан неверно. Должно быть 11 цифр, например, +79012345678."));
+    }
+
+    @Test
+    void AgreementCheckTest(){
+        open("http://localhost:9999");
+        SelenideElement form = $(".form");
+        form.$("[data-test-id=name] input").setValue("Поляков Александр");
+        form.$("[data-test-id=phone] input").setValue("+79999000203");
+        form.$("[role=button]").click();
+        $(".input_invalid[data-test-id=agreement]").shouldHave(exactText("Я соглашаюсь с условиями обработки и использования моих персональных данных и разрешаю сделать запрос в бюро кредитных историй"));
+    }
 }
+
